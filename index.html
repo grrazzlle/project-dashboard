@@ -4,18 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project Dashboard</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
 </head>
 <body>
-  <!-- Sign in / first-run setup -->
+  <!-- Sign in with a GitHub token -->
   <section id="auth-view" class="auth" hidden>
     <form id="auth-form" class="card auth-card">
-      <h1 id="auth-title">Sign in</h1>
-      <p id="auth-hint" class="muted"></p>
-      <label data-setup-only>Your name <input name="displayName" autocomplete="name"></label>
-      <label>Username <input name="username" required autocomplete="username"></label>
-      <label>Password <input name="password" type="password" required minlength="8" autocomplete="current-password"></label>
+      <h1>🧩 Project Dashboard</h1>
+      <p class="muted">Sign in with a GitHub token. It stays on this device only.</p>
+      <ol class="steps">
+        <li><a id="token-link" href="#" target="_blank" rel="noopener">Create a token on GitHub ↗</a>. Leave the box it ticks checked, set an expiration, and click <strong>Generate token</strong>.</li>
+        <li>Copy the token and paste it here.</li>
+      </ol>
+      <label>Token <input name="token" type="password" required autocomplete="off" spellcheck="false" class="mono" placeholder="ghp_…"></label>
       <p class="error" id="auth-error"></p>
       <button class="btn primary" type="submit" id="auth-submit">Sign in</button>
     </form>
@@ -28,8 +30,7 @@
       <input id="search" type="search" placeholder="Search projects…" aria-label="Search projects">
       <div class="topbar-actions">
         <button class="btn primary" id="new-project">+ Add project</button>
-        <button class="btn ghost" id="open-people" title="People">👥</button>
-        <button class="btn ghost" id="logout">Sign out</button>
+        <button class="btn ghost" id="open-account" title="Account"><img id="avatar" class="avatar" alt=""></button>
       </div>
     </header>
 
@@ -46,11 +47,11 @@
 
   <!-- Add / edit project -->
   <dialog id="project-dialog">
-    <form id="project-form" method="dialog" class="dialog-body">
+    <form id="project-form" class="dialog-body">
       <h2 id="project-dialog-title">Add project</h2>
       <div class="row">
         <label class="emoji-field">Icon <input name="emoji" maxlength="4" placeholder="🚀"></label>
-        <label class="grow">Name <input name="name" required></label>
+        <label class="grow">Name <input name="name" required maxlength="100"></label>
       </div>
       <label>What it is
         <select name="kind">
@@ -65,25 +66,24 @@
       <label>Description <input name="description" placeholder="One line about what it does"></label>
       <label>Link to open it <input name="url" type="url" placeholder="https://…"></label>
       <label>Code repo <input name="repo_url" type="url" placeholder="https://github.com/…"></label>
-      <fieldset class="command-fields">
-        <legend>Run command <span class="muted">(optional — runs on the dashboard's server)</span></legend>
-        <label>Command <input name="command" placeholder="npm start" spellcheck="false" class="mono"></label>
-        <label>Folder <input name="cwd" placeholder="/home/me/my-project" spellcheck="false" class="mono"></label>
-      </fieldset>
+      <label>How to run it <span class="muted">(commands to copy and paste)</span>
+        <textarea name="command" rows="2" placeholder="cd ~/projects/photo-renamer&#10;npm start" spellcheck="false" class="mono"></textarea>
+      </label>
       <label>Tags <input name="tags" placeholder="family, finance, games"></label>
-      <label>Notes <textarea name="notes" rows="4" placeholder="How to use it, logins, anything worth remembering"></textarea></label>
+      <label>Notes <textarea name="notes" rows="4" placeholder="How to use it, anything worth remembering"></textarea></label>
+      <p class="muted small" id="public-warning" hidden>⚠️ This list is saved in a public repo. Don't put passwords or private info here.</p>
       <label class="check"><input type="checkbox" name="pinned"> Pin to top</label>
       <p class="error" id="project-error"></p>
       <div class="dialog-actions">
         <button class="btn danger" type="button" id="delete-project" hidden>Delete</button>
         <span class="grow"></span>
         <button class="btn" type="button" data-close>Cancel</button>
-        <button class="btn primary" type="submit">Save</button>
+        <button class="btn primary" type="submit" id="save-project">Save</button>
       </div>
     </form>
   </dialog>
 
-  <!-- Project detail: notes, run output, embedded view -->
+  <!-- Project detail -->
   <dialog id="detail-dialog" class="wide">
     <div class="dialog-body">
       <div class="detail-head">
@@ -94,33 +94,29 @@
     </div>
   </dialog>
 
-  <!-- People -->
-  <dialog id="people-dialog">
+  <!-- Account -->
+  <dialog id="account-dialog">
     <div class="dialog-body">
       <div class="detail-head">
-        <h2>People</h2>
+        <h2>Account</h2>
         <button class="btn ghost" data-close aria-label="Close">✕</button>
       </div>
-      <ul id="people-list" class="people"></ul>
+      <p>Signed in as <strong id="account-name"></strong></p>
+      <p class="muted">Projects are saved in <a id="data-link" target="_blank" rel="noopener"></a>. Every change is a commit, so you can see the history or undo things there.</p>
       <h3>Add someone</h3>
-      <form id="add-person-form" class="stack">
-        <label>Name <input name="displayName" placeholder="Their name"></label>
-        <label>Username <input name="username" required autocomplete="off"></label>
-        <label>Temporary password <input name="password" type="password" required minlength="8" autocomplete="new-password"></label>
-        <p class="error" id="person-error"></p>
-        <button class="btn primary" type="submit">Add person</button>
-      </form>
-      <h3>Change my password</h3>
-      <form id="password-form" class="stack">
-        <label>Current password <input name="currentPassword" type="password" required autocomplete="current-password"></label>
-        <label>New password <input name="newPassword" type="password" required minlength="8" autocomplete="new-password"></label>
-        <p class="error" id="password-error"></p>
-        <button class="btn" type="submit">Change password</button>
-      </form>
+      <ol class="steps">
+        <li>They need a GitHub account.</li>
+        <li><a id="collab-link" target="_blank" rel="noopener">Add them as a collaborator ↗</a> and have them accept the email invite.</li>
+        <li>Send them this dashboard's link. They sign in with their own token.</li>
+      </ol>
+      <div class="dialog-actions">
+        <span class="grow"></span>
+        <button class="btn danger" id="logout">Sign out</button>
+      </div>
     </div>
   </dialog>
 
   <div id="toast" class="toast" hidden></div>
-  <script type="module" src="/app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
