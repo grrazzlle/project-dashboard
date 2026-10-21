@@ -11,11 +11,35 @@
       "repo_url": "https://script.google.com/home/projects/14GFI8RAQYpFA8X8GArw_aIQOHQNdLSrcgetaGP7UeqFErW_heTYtP80f/edit",
       "command": "",
       "notes": "Toy sheet: https://docs.google.com/spreadsheets/d/1FOxLlQe8fKy9fXsXsq5efUUEieQTIvtWTMWyUG-i__I/edit\nSnapshots (Toy History folder): https://drive.google.com/drive/folders/1iZ_whg7oDBPRvPVYj7Y7PCN_qu20Gixk\n\nThe Code link opens the Google Apps Script project. After changing the code, publish with Deploy > Manage deployments > Edit > New version so the page link stays the same.\nSheet menu (Toy Rotation): open page, send reminder now, refresh pictures, sort toys, save or restore a snapshot.",
-      "tags": ["google apps script", "google sheets", "family"],
+      "tags": [
+        "google apps script",
+        "google sheets",
+        "family"
+      ],
       "pinned": false,
       "created_at": "2026-10-21T12:00:00.000Z",
       "created_by": "grrazzlle",
       "updated_at": "2026-10-21T12:00:00.000Z",
+      "updated_by": "grrazzlle"
+    },
+    {
+      "id": "b9b2844f-e59a-40f5-8e53-f6a09087f97b",
+      "name": "Agent Maker",
+      "emoji": "🤖",
+      "kind": "artifact",
+      "description": "Describe a role (tax preparer, chef, day planner) and get an agent that does that job. Give it documents and it makes documents, spreadsheets, calendar events and task lists, fills PDF forms, drafts Gmail emails and works with Google Drive.",
+      "url": "https://claude.ai/artifact/7oJgZqfvXRB2ed6WLZUhDt",
+      "repo_url": "",
+      "command": "",
+      "notes": "Open it in Claude while signed in. The first time, it asks permission to use Claude, and again the first time an agent uses Gmail or Google Drive.\n\nTabs per agent: Chat (ask it to do work), Work (files, tasks and what it remembers), Documents (upload PDFs, photos or text it reads), Skills & setup (refine it in plain words or edit directly).\n\nAgents and documents are saved privately to your Claude account. Black out SSNs and account numbers before uploading.\n\nTo change the app, open the Claude project \"ai agent maker\" and ask for the change.",
+      "tags": [
+        "claude",
+        "ai agents"
+      ],
+      "pinned": false,
+      "created_at": "2026-10-21T04:15:00.000Z",
+      "created_by": "grrazzlle",
+      "updated_at": "2026-10-21T04:15:00.000Z",
       "updated_by": "grrazzlle"
     }
   ]
