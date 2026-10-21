@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "projects": [
+    {
+      "id": "4d1c16df-7fb9-431d-b980-f64bbd004b62",
+      "name": "Leo's Toy Rotation",
+      "emoji": "🧸",
+      "kind": "web",
+      "description": "Picks one toy per category for Leo every other Friday at 5pm. Rate the last set, swap or hand-pick toys, then confirm to update the toy sheet and email the list.",
+      "url": "https://script.google.com/macros/s/AKfycbzcLXYykP-V264eagSCd4YZ17GK0tYGhPwyGeyTVjWWiJsoKuOcT5_UIuV3XwOMS714/exec",
+      "repo_url": "https://script.google.com/home/projects/14GFI8RAQYpFA8X8GArw_aIQOHQNdLSrcgetaGP7UeqFErW_heTYtP80f/edit",
+      "command": "",
+      "notes": "Toy sheet: https://docs.google.com/spreadsheets/d/1FOxLlQe8fKy9fXsXsq5efUUEieQTIvtWTMWyUG-i__I/edit\nSnapshots (Toy History folder): https://drive.google.com/drive/folders/1iZ_whg7oDBPRvPVYj7Y7PCN_qu20Gixk\n\nThe Code link opens the Google Apps Script project. After changing the code, publish with Deploy > Manage deployments > Edit > New version so the page link stays the same.\nSheet menu (Toy Rotation): open page, send reminder now, refresh pictures, sort toys, save or restore a snapshot.",
+      "tags": ["google apps script", "google sheets", "family"],
+      "pinned": false,
+      "created_at": "2026-10-21T12:00:00.000Z",
+      "created_by": "grrazzlle",
+      "updated_at": "2026-10-21T12:00:00.000Z",
+      "updated_by": "grrazzlle"
+    }
+  ]
+}
