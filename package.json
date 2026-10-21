@@ -1,0 +1,19 @@
+{
+  "name": "project-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A shared dashboard for launching and managing Claude-built projects",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning src/server.js",
+    "dev": "node --no-warnings=ExperimentalWarning --watch src/server.js",
+    "test": "node --no-warnings=ExperimentalWarning --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+</head>
+<body>
+  <!-- Sign in / first-run setup -->
+  <section id="auth-view" class="auth" hidden>
+    <form id="auth-form" class="card auth-card">
+      <h1 id="auth-title">Sign in</h1>
+      <p id="auth-hint" class="muted"></p>
+      <label data-setup-only>Your name <input name="displayName" autocomplete="name"></label>
+      <label>Username <input name="username" required autocomplete="username"></label>
+      <label>Password <input name="password" type="password" required minlength="8" autocomplete="current-password"></label>
+      <p class="error" id="auth-error"></p>
+      <button class="btn primary" type="submit" id="auth-submit">Sign in</button>
+    </form>
+  </section>
+
+  <!-- Main dashboard -->
+  <div id="app-view" hidden>
+    <header class="topbar">
+      <div class="brand">🧩 Projects</div>
+      <input id="search" type="search" placeholder="Search projects…" aria-label="Search projects">
+      <div class="topbar-actions">
+        <button class="btn primary" id="new-project">+ Add project</button>
+        <button class="btn ghost" id="open-people" title="People">👥</button>
+        <button class="btn ghost" id="logout">Sign out</button>
+      </div>
+    </header>
+
+    <nav class="filters" id="filters"></nav>
+
+    <main>
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" hidden>
+        <p>No projects yet.</p>
+        <button class="btn primary" id="empty-add">Add your first project</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add / edit project -->
+  <dialog id="project-dialog">
+    <form id="project-form" method="dialog" class="dialog-body">
+      <h2 id="project-dialog-title">Add project</h2>
+      <div class="row">
+        <label class="emoji-field">Icon <input name="emoji" maxlength="4" placeholder="🚀"></label>
+        <label class="grow">Name <input name="name" required></label>
+      </div>
+      <label>What it is
+        <select name="kind">
+          <option value="web">Web app / website</option>
+          <option value="artifact">Claude artifact</option>
+          <option value="claude-project">Claude project / chat</option>
+          <option value="repo">GitHub repo</option>
+          <option value="command">Script / command</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+      <label>Description <input name="description" placeholder="One line about what it does"></label>
+      <label>Link to open it <input name="url" type="url" placeholder="https://…"></label>
+      <label>Code repo <input name="repo_url" type="url" placeholder="https://github.com/…"></label>
+      <fieldset class="command-fields">
+        <legend>Run command <span class="muted">(optional — runs on the dashboard's server)</span></legend>
+        <label>Command <input name="command" placeholder="npm start" spellcheck="false" class="mono"></label>
+        <label>Folder <input name="cwd" placeholder="/home/me/my-project" spellcheck="false" class="mono"></label>
+      </fieldset>
+      <label>Tags <input name="tags" placeholder="family, finance, games"></label>
+      <label>Notes <textarea name="notes" rows="4" placeholder="How to use it, logins, anything worth remembering"></textarea></label>
+      <label class="check"><input type="checkbox" name="pinned"> Pin to top</label>
+      <p class="error" id="project-error"></p>
+      <div class="dialog-actions">
+        <button class="btn danger" type="button" id="delete-project" hidden>Delete</button>
+        <span class="grow"></span>
+        <button class="btn" type="button" data-close>Cancel</button>
+        <button class="btn primary" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Project detail: notes, run output, embedded view -->
+  <dialog id="detail-dialog" class="wide">
+    <div class="dialog-body">
+      <div class="detail-head">
+        <h2 id="detail-title"></h2>
+        <button class="btn ghost" data-close aria-label="Close">✕</button>
+      </div>
+      <div id="detail-content"></div>
+    </div>
+  </dialog>
+
+  <!-- People -->
+  <dialog id="people-dialog">
+    <div class="dialog-body">
+      <div class="detail-head">
+        <h2>People</h2>
+        <button class="btn ghost" data-close aria-label="Close">✕</button>
+      </div>
+      <ul id="people-list" class="people"></ul>
+      <h3>Add someone</h3>
+      <form id="add-person-form" class="stack">
+        <label>Name <input name="displayName" placeholder="Their name"></label>
+        <label>Username <input name="username" required autocomplete="off"></label>
+        <label>Temporary password <input name="password" type="password" required minlength="8" autocomplete="new-password"></label>
+        <p class="error" id="person-error"></p>
+        <button class="btn primary" type="submit">Add person</button>
+      </form>
+      <h3>Change my password</h3>
+      <form id="password-form" class="stack">
+        <label>Current password <input name="currentPassword" type="password" required autocomplete="current-password"></label>
+        <label>New password <input name="newPassword" type="password" required minlength="8" autocomplete="new-password"></label>
+        <p class="error" id="password-error"></p>
+        <button class="btn" type="submit">Change password</button>
+      </form>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
