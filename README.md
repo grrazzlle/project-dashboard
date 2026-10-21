@@ -1,77 +1,38 @@
 # Project Dashboard
 
-One place for all the projects we've built with Claude. Add a project once, then open it, run it, or look up how to use it — from any device.
+One place for all the projects we've built with Claude. Add a project once, then open it or look up how to use it from any device.
 
-- **Accounts** — sign-in with username/password. The first person to open it creates the first account; anyone signed in can add more people (👥 button).
-- **Projects** — name, icon, type, description, link, code repo, tags, notes, pin to top. Everyone can add, edit and delete. Each card shows who changed it last.
-- **Open** — opens the project's link in a new tab. **Details → View here** tries to show it inside the dashboard (some sites, including claude.ai, block that).
-- **Online dot** — green/red shows whether the project's link is responding.
-- **Run** — for scripts: runs the project's command on the machine the dashboard is running on and shows live output, with a Stop button. Off by default (see below).
+It's a static site on GitHub Pages, so it's free and there's no server to keep running. Projects are saved in [`projects.json`](projects.json) in this repo. Every change is a commit, so you get a full history and can undo anything.
 
-## What can be a "project"
+- **Sign in** with a GitHub token. It stays in that browser only.
+- **Projects**: name, icon, type, description, link, code repo, how-to-run steps, tags, notes, pin to top. Anyone with access can add, edit and delete, and each card shows who changed it last.
+- **Open** launches the project's link in a new tab. **Details → View here** tries to show it inside the dashboard (claude.ai blocks this, so use Open for artifacts).
+- **Copy run steps** copies a script's commands so you can paste them into a terminal.
+- **Green/red dot** shows whether the project's link is reachable.
+- If you both save at the same time, the second save is re-applied on top of the first instead of overwriting it.
 
-| Type | Put this in |
-|---|---|
-| Web app / website | Link to the deployed site |
-| Claude artifact | The `claude.ai/artifact/...` link |
-| Claude project / chat | The `claude.ai/project/...` link |
-| GitHub repo | Code repo link |
-| Script / command | Command (e.g. `npm start`, `python report.py`) and the folder to run it in |
+## Setup (once)
 
-## Run it
+1. **Turn on Pages:** Settings → Pages → Build and deployment → Source: *Deploy from a branch* → Branch: `main`, folder `/ (root)` → Save. After a minute the dashboard is at **https://grrazzlle.github.io/project-dashboard/**.
+2. **Sign in:** open that link, click *Create a token on GitHub*, generate it, and paste it in.
 
-Needs Node.js 22.13 or newer.
+## Adding someone
 
-```sh
-npm install
-npm start
-```
+1. They need a GitHub account.
+2. Settings → Collaborators → Add people, and they accept the email invite.
+3. They open the dashboard link and sign in with their own token.
 
-Open http://localhost:3000 and create your account.
+## Privacy
 
-To let the Run button execute commands:
+This repo is public, so anyone can read `projects.json`. Only people you add as collaborators can change it. Don't put passwords or private details in notes.
 
-```sh
-ALLOW_COMMANDS=true npm start
-```
+To keep the list private, create a private repo (e.g. `project-dashboard-data`) and change `repo` in [`config.js`](config.js) to its name. The dashboard creates `projects.json` there on the first save. The dashboard itself can stay public.
 
-Commands run with the same permissions as the dashboard process, so only turn this on where everyone who can sign in is someone you'd trust at your keyboard.
+## Files
 
-### Settings
+- `index.html`, `styles.css`: the page
+- `app.js`: dashboard logic
+- `github.js`: reads and writes `projects.json` through the GitHub API
+- `config.js`: where projects are saved
 
-| Variable | Default | What it does |
-|---|---|---|
-| `PORT` | `3000` | Port to listen on |
-| `HOST` | `0.0.0.0` | Address to bind |
-| `DB_PATH` | `data/dashboard.db` | SQLite file holding users and projects. Back this up. |
-| `ALLOW_COMMANDS` | `false` | Enable the Run button |
-| `SECURE_COOKIES` | `false` | Set `true` when served over HTTPS |
-| `TRUST_PROXY` | `false` | Set `true` behind a reverse proxy (Caddy, nginx, Fly, Render…) |
-
-### Docker
-
-```sh
-docker build -t project-dashboard .
-docker run -p 3000:3000 -v dashboard-data:/app/data project-dashboard
-```
-
-## Getting it on your phones
-
-Pick one:
-
-- **Home computer + Tailscale** (easiest, stays private): run `npm start` on a computer that stays on, install Tailscale on it and both phones, then open `http://<computer-name>:3000`. This is also the setup where **Run** makes sense, since commands run on that computer next to your project folders.
-- **Hosted** (Render, Fly.io, Railway): deploy the Docker image, attach a persistent volume at `/app/data`, and set `SECURE_COOKIES=true` and `TRUST_PROXY=true`. Leave `ALLOW_COMMANDS` off unless your scripts live on that server.
-
-## Development
-
-```sh
-npm run dev   # restarts on file changes
-npm test
-```
-
-- `src/server.js` — startup and settings
-- `src/app.js` — API routes
-- `src/db.js` — database tables
-- `src/auth.js` — passwords and sessions
-- `src/runner.js` — running project commands
-- `public/` — the web page (plain HTML/CSS/JS, no build step)
+There's no build step. To try changes locally, run `python3 -m http.server` and open http://localhost:8000.
